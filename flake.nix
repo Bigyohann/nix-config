@@ -11,7 +11,6 @@
 
   outputs = { nixpkgs, home-manager, ... }@inputs:
     let
-      # Function to create a configuration for a specific user and system
       mkHome = system: username: home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
         modules = [ ./home.nix ];
@@ -20,10 +19,14 @@
     in
     {
       homeConfigurations = {
-        # You define specific targets here
+        # macOS (Apple Silicon)
         "bigyohann@macbook-pro" = mkHome "aarch64-darwin" "bigyohann";
-        "bigyohann@work-laptop" = mkHome "x86_64-darwin" "bigyohann";
-        "bigyohann@linux-server" = mkHome "x86_64-linux" "bigyohann";
+        
+        # NixOS / Generic Linux (x86_64)
+        "bigyohann@nixos" = mkHome "x86_64-linux" "bigyohann";
+        
+        # Default fallback for your current NixOS shell
+        "bigyohann" = mkHome "x86_64-linux" "bigyohann";
       };
     };
 }
